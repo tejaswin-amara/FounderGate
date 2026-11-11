@@ -1,7 +1,8 @@
+import datetime
 from enum import Enum
 
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 app = FastAPI(title="FounderGate API", version="0.1.0")
 
@@ -20,6 +21,7 @@ class EvidenceClaim(BaseModel):
     bias_type: str
     severity: str
     confidence_score: float
+    context_needed: str | None = None
     founder_decision: FounderDecision | None = None
     founder_note: str | None = None
 
@@ -29,6 +31,22 @@ class SessionState(str, Enum):
     ADVERSARIAL_ANALYSIS = "ADVERSARIAL_ANALYSIS"
     HALTED_AT_HUMAN_GATE = "HALTED_AT_HUMAN_GATE"
     COMPLETED_HUMAN_VERIFIED = "COMPLETED_HUMAN_VERIFIED"
+class Session(BaseModel):
+    id: str
+    owner_id: str
+    status: SessionState
+    expires_at: datetime.datetime
+
+    def resolve_checkpoint(self, owner_id: str, current_time: datetime.datetime, request: "CheckpointResolveRequest"):
+        if self.owner_id != owner_id:
+            raise ValueError("Unauthorized owner")
+        if current_time > self.expires_at:
+            raise ValueError("Session expired")
+        if self.status != SessionState.HALTED_AT_HUMAN_GATE:
+            raise ValueError("Invalid session state transition")
+
+        self.status = SessionState.COMPLETED_HUMAN_VERIFIED
+
 
 class AnalyzeRequest(BaseModel):
     scenario_key: str | None = None
@@ -51,6 +69,21 @@ class CheckpointResolveRequest(BaseModel):
     pivoted_hypothesis: str
     target_wedge: str | None = None
     language: str = "bilingual"
+
+    @field_validator("pivoted_hypothesis")
+    @classmethod
+    def validate_pivoted_hypothesis(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("pivoted_hypothesis cannot be blank")
+        return v
+
+    @field_validator("decisions")
+    @classmethod
+    def validate_decisions(cls, v: list[EvidenceClaim]) -> list[EvidenceClaim]:
+        for decision in v:
+            if decision.founder_decision is None:
+                raise ValueError("All claims must have a founder_decision")
+        return v
 
 class CheckpointResolveResponse(BaseModel):
     status: SessionState
