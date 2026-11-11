@@ -1,0 +1,24 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "> **Submitted to:** AI Agents for Founders Challenge — HETIC 2026   > **Runtime inference target:** €0.00 when using the built-in sandbox, local inference, or eligible free-tier allowances   > **Core mission:** Give founders back their most valuable asset—**time to think**—by automating repetitive interview synthesis while forcing critical human judgment on confirmation bias.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tejaswin-amara/FounderGate.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/tejaswin-amara/FounderGate/issues"
+  },
+  "homepage": "https://github.com/tejaswin-amara/FounderGate#readme"
+}
