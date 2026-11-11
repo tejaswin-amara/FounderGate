@@ -1,4 +1,6 @@
-# 07 — Google Jules Multi-Session Execution Plan
+# 07 — Google Jules Multi-Session Execution Plan (Historical / Superseded for post-November 11 execution)
+
+> **Platform status:** Google's October 29, 2026 notice says Jules becomes read-only after November 11, 2026 and winds down on December 31, 2026. The November 16 implementation start in this plan is therefore not executable in Jules. Use the service assignments and agent-migration instructions in [docs/08_MCP_INTEGRATION_AND_AGENT_MIGRATION.md](./08_MCP_INTEGRATION_AND_AGENT_MIGRATION.md) with a replacement MCP-capable coding agent. Do not assume Jules MCP credentials or connections transfer.
 
 Project: FounderGate  
 Repository: https://github.com/tejaswin-amara/FounderGate  
@@ -67,10 +69,10 @@ References: https://jules.google/docs/usage-limits and https://jules.google/docs
 - Wave 3: J05 + J07 (two concurrent sessions).
 - Wave 4: J06 only.
 - Wave 5: J08 + J09 (two concurrent sessions).
-- Wave 6: J10 + J11 (two concurrent sessions, provided path ownership is respected).
-- Wave 7: J12 only.
-- Wave 8: J13 (parallelize only if audit findings are independent and each has a separate path owner).
-- Wave 9: J14 only.
+- Wave 6: J10 only.
+- Wave 7: J11 only, after J10 is merged.
+- Wave 8: J12 only, read-only, after J10 and J11 are merged.
+- Wave 9: J13 (parallelize only if audit findings are independent and each has a separate path owner).\n- Wave 10: J14 only.
 
 All dependent sessions start from the latest main after prerequisite PRs are merged. Parallel work is allowed only when paths and interfaces are independent.
 
