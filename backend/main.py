@@ -3,6 +3,8 @@ from enum import Enum
 from fastapi import FastAPI
 from pydantic import BaseModel
 
+from app.safety_gate import verify_and_sanitize_input
+
 app = FastAPI(title="FounderGate API", version="0.1.0")
 
 class FounderDecision(str, Enum):
@@ -67,12 +69,48 @@ async def get_scenarios() -> list[str]:
 
 @app.post("/api/v1/analyze", response_model=AnalyzeResponse)
 async def analyze(request: AnalyzeRequest):
+    # Sanitize inputs before any model requests
+    safe_hypothesis = verify_and_sanitize_input(request.hypothesis)
+
+    safe_competitor_context = None
+    if request.competitor_context:
+        safe_competitor_context = verify_and_sanitize_input(request.competitor_context)
+
+    safe_raw_evidence = None
+    if request.raw_evidence:
+        safe_raw_evidence = verify_and_sanitize_input(request.raw_evidence)
+
+    audit_log = []
+
+    # Prompt injection check handling
+    if (safe_hypothesis == "[PROMPT_INJECTION_DETECTED]" or
+        safe_competitor_context == "[PROMPT_INJECTION_DETECTED]" or
+        safe_raw_evidence == "[PROMPT_INJECTION_DETECTED]"):
+
+        audit_log.append({
+            "event": "SAFETY_GATE_REJECTED",
+            "reason": "prompt_injection",
+            # Never store the raw input in logs!
+        })
+        return AnalyzeResponse(
+            session_id="FG-EXAMPLE",
+            status=SessionState.SAFETY_GATE,
+            claims=[],
+            telemetry={},
+            audit_log=audit_log
+        )
+
+    audit_log.append({
+        "event": "SAFETY_GATE_PASSED",
+        "details": "Input sanitized for PII"
+    })
+
     return AnalyzeResponse(
         session_id="FG-EXAMPLE",
         status=SessionState.HALTED_AT_HUMAN_GATE,
         claims=[],
         telemetry={},
-        audit_log=[]
+        audit_log=audit_log
     )
 
 @app.post("/api/v1/checkpoint-resolve", response_model=CheckpointResolveResponse)
