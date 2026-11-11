@@ -1,410 +1,174 @@
-# FounderGate: Adversarial Mom-Test Agent
+# FounderGate // Adversarial Mom-Test & GTM Discovery Agent
 
-> **Don't trust AI. Audit your startup idea.**
->
-> A frugal, adversarial multi-agent customer-discovery and go-to-market engine that audits founder hypotheses against raw evidence, pauses for mandatory human judgment, and generates strategic decision artifacts only after founder sign-off.
+> **Submitted to:** AI Agents for Founders Challenge — HETIC 2026  
+> **Runtime inference target:** €0.00 when using the built-in sandbox, local inference, or eligible free-tier allowances  
+> **Core mission:** Give founders back their most valuable asset—**time to think**—by automating repetitive interview synthesis while forcing critical human judgment on confirmation bias.
 
 <p align="center">
   <a href="https://foundergate-hetic26.vercel.app">Live Demo</a> ·
-  <a href="https://github.com/tejaswin-amara/FounderGate">GitHub Repository</a> ·
-  <a href="https://github.com/tejaswin-amara/FounderGate/blob/main/workflows/n8n-foundergate-workflow.json">n8n Workflow Export</a>
+  <a href="https://github.com/tejaswin-amara/FounderGate">GitHub Repository</a>
 </p>
 
-**Built with:** Python, FastAPI, Next.js, React, TypeScript, Tailwind CSS, Gemini, Mistral, Groq, Ollama, Hugging Face, n8n, and Docker.
+## 🌍 English Overview & 🇫🇷 Résumé en Français
+
+### 🇬🇧 English Summary
+
+Early-stage founders lose hours every week manually tagging customer-discovery interviews and competitor reviews. Worse, standard chatbots can act as **sycophancy engines**—turning polite compliments such as “Your mockup looks sleek!” and hypothetical promises such as “I'd pay €29/month when you launch!” into false market validation.
+
+**FounderGate** is a frugal, adversarial multi-agent Customer Discovery and Go-To-Market (GTM) engine. It:
+
+1. **Screens privacy and security risks:** redacts supported personal identifiers (emails, phone numbers, and IBANs) before external model calls and checks untrusted input for prompt-injection patterns.
+2. **Runs an adversarial dual-agent audit:** pits an **Optimistic Evidence Extractor** against a **Mom-Test Skeptic** to distinguish compliments, hypothetical future promises, and leading founder questions from evidence of past behavior and actual spending.
+3. **Enforces a mandatory human checkpoint:** halts at `HALTED_AT_HUMAN_GATE` and blocks strategic synthesis until the founder adjudicates every claim as **Accept**, **Discard**, or **Log Assumption Debt**, then records a pivoted hypothesis.
+4. **Generates bilingual strategic artifacts:** after sign-off, prepares an English/French Strategic Decision Record (ADR/SDR), Assumption Debt Ledger, next five non-leading interview questions, and Investor Pre-Emptive Objection Matrix.
+
+**The principle:** AI audits evidence and reduces repetitive work; the founder retains strategic authority.
+
+### 🇫🇷 Résumé exécutif
+
+Les fondateurs de startups en phase de démarrage perdent des heures à analyser leurs entretiens clients et les avis concurrents. Pire encore, les assistants IA classiques peuvent amplifier le **biais de confirmation** en transformant des compliments polis et des promesses hypothétiques en fausse validation du marché.
+
+**FounderGate** structure la découverte client autour du jugement critique humain :
+
+1. **Protection des données et sécurité :** anonymisation des données personnelles prises en charge (e-mails, téléphones et IBAN) et détection des injections de prompt avant tout appel à un modèle externe.
+2. **Audit adversarial :** un Extracteur de preuves confronte ses interprétations à un Sceptique appliquant les principes du *Mom Test*.
+3. **Point de contrôle humain obligatoire :** l'exécution s'arrête à `HALTED_AT_HUMAN_GATE`. Le fondateur doit accepter, écarter ou inscrire chaque affirmation dans le registre de dette d'hypothèses avant de débloquer la synthèse stratégique.
+4. **Synthèse bilingue :** après validation humaine, FounderGate prépare un ADR/SDR, un registre de dette d'hypothèses, cinq questions d'entretien non orientées et une matrice des objections des investisseurs en anglais et en français.
+
+**Principe fondamental :** l'IA aide à examiner les preuves ; le fondateur prend la décision stratégique.
+
+---
+
+## ⚡ 30-Second Judge Verification
+
+### Option 1: Docker Compose
+
+The following commands describe the intended setup once the application source, Docker Compose file, and environment template have been committed:
+
+~~~bash
+git clone https://github.com/tejaswin-amara/FounderGate.git
+cd FounderGate
+cp .env.example .env
+docker compose up --build
+~~~
+
+- **Frontend workspace:** http://localhost:3000
+- **FastAPI interactive docs:** http://localhost:8000/docs
+
+### Option 2: Local manual run
+
+**Backend (Python 3.11+):**
+
+~~~bash
+cd backend
+python -m venv .venv
+# macOS / Linux
+source .venv/bin/activate
+# Windows PowerShell: .venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+uvicorn main:app --reload --port 8000
+~~~
+
+**Frontend (Node.js 20+):**
+
+~~~bash
+cd frontend
+npm install
+npm run dev
+~~~
+
+### Option 3: Automated tests
+
+~~~bash
+cd backend
+pytest -v
+~~~
+
+The intended test suite should verify:
+
+1. PII redaction, including `[REDACTED_EMAIL_GDPR]`, `[REDACTED_PHONE_GDPR]`, and `[REDACTED_IBAN_GDPR]`.
+2. Prompt-injection blocking with HTTP 400.
+3. Hard human-checkpoint enforcement, including HTTP 422 when any claim is unadjudicated or the pivoted hypothesis is missing.
+
+> **Repository readiness note:** This repository currently contains the documentation suite. The application source, Docker Compose configuration, environment template, test suite, and n8n workflow export must be added and verified before the commands above can be treated as runnable instructions. No API keys should be committed.
+
+---
+
+## 📚 Documentation Index
+
+| File | Purpose |
+|---|---|
+| [AGENTS.md](./AGENTS.md) | AI coding and runtime governance: explicit state, hard lifecycle gates, evidence grounding, token frugality, and secret handling. |
+| [CONTRIBUTING.md](./CONTRIBUTING.md) | Student-team roles, branch and pull-request workflow, quality checks, and secret-leak prevention. |
+| [SECURITY.md](./SECURITY.md) | Privacy controls, prompt-injection defense, STRIDE threat model, and security verification requirements. |
+| [docs/01_PRD_AND_TECHNICAL_SPEC.md](./docs/01_PRD_AND_TECHNICAL_SPEC.md) | Product requirements, state machine, data contracts, and API schemas. |
+| [docs/02_AGENT_PROMPTS_AND_RUBRICS.md](./docs/02_AGENT_PROMPTS_AND_RUBRICS.md) | Extractor, Mom-Test Skeptic, and Synthesizer prompt contracts and classification rubric. |
+| [docs/03_ADR_LOG.md](./docs/03_ADR_LOG.md) | Architecture Decision Records ADR-001 through ADR-003. |
+| [docs/04_AI_DISCLOSURE_AND_TIME_SAVED_AUDIT.md](./docs/04_AI_DISCLOSURE_AND_TIME_SAVED_AUDIT.md) | Equal Access AI provider ledger, token accounting, and time-saved methodology. |
+| [docs/05_RESPONSIBLE_AI_AND_LIMITATIONS.md](./docs/05_RESPONSIBLE_AI_AND_LIMITATIONS.md) | Data provenance, bias mitigation, failure modes, and synthetic-data policy. |
+| [docs/06_DEVELOPMENT_ROADMAP_AND_RUNBOOK.md](./docs/06_DEVELOPMENT_ROADMAP_AND_RUNBOOK.md) | November 16–December 18, 2026 development roadmap, QA checklist, recovery guide, and judge runbook. |
 
 ---
 
 ## Inspiration
 
-### The sycophancy trap killing early-stage startups
+Early-stage founders need reliable evidence, not another chatbot that agrees with them. Customer interviews contain a mixture of real pain, polite encouragement, hypothetical buying intentions, and founder-led questions. Treating all of these as validation can send a team into months of building for a problem that customers have not demonstrated they will pay to solve.
 
-Founders spend hours every week synthesizing customer-discovery interviews, competitor reviews, and market-research notes. The bigger problem is that the conclusions drawn from this material can be wrong.
-
-When a founder gives a conventional LLM chatbot an interview transcript and asks, *“Does this validate my startup idea?”*, the model can become a confirmation-bias amplifier. It may summarize polite compliments such as *“Your UI looks sleek!”* or hypothetical promises such as *“I'd definitely pay €29/month when you launch!”* as strong market validation. Neither statement proves that a customer has experienced the problem, changed their behavior, or spent money to solve it.
-
-Rob Fitzpatrick's *The Mom Test* emphasizes asking about people's lives and past behavior instead of inviting compliments or hypothetical promises. FounderGate applies that evidence-first approach to an AI-assisted discovery workflow.
-
-We built **FounderGate** for the **AI Agents for Founders Challenge — HETIC 2026** around one conviction:
-
-**AI should never decide a founder's strategy. It should reduce repetitive synthesis, challenge confirmation bias, expose weak evidence, and give the founder more time to think.**
-
----
+Inspired by Rob Fitzpatrick's *The Mom Test*, FounderGate makes the AI challenge optimistic interpretations and forces a founder to confront each unresolved claim before strategy is generated.
 
 ## What it does
 
-FounderGate is a frugal, adversarial multi-agent Customer Discovery and Go-To-Market (GTM) engine. It accepts customer interview transcripts and competitor context, analyzes the evidence from opposing perspectives, and enforces a human decision checkpoint before producing strategic outputs.
-
-### 1. GDPR-oriented PII scrubbing and prompt-injection gate
-
-Before input is sent to an external language model, the safety layer (identified in the project design as `safety_gate.py`) applies regular-expression and heuristic checks.
-
-- Email addresses are replaced with `[REDACTED_EMAIL_GDPR]`.
-- Phone numbers are replaced with `[REDACTED_PHONE_GDPR]`.
-- IBANs are replaced with `[REDACTED_IBAN_GDPR]`.
-- Untrusted transcripts and competitor material are checked for prompt-injection attempts.
-- Security-gate actions are recorded for inspection.
-
-Instruction-hijacking patterns such as *“Ignore previous instructions”* and *“Override human checkpoint”* are intended to be rejected during pre-flight validation with **HTTP 400**.
-
-### 2. Adversarial dual-agent audit
-
-Two agents inspect the same discovery evidence from opposing perspectives.
-
-**Agent 1 — Optimistic Evidence Extractor**
-
-- Scans transcripts line by line.
-- Extracts atomic, verbatim quotes that may support or inform the founder's hypothesis.
-- Preserves exact source-line references so the founder can inspect the original context.
-
-**Agent 2 — Mom-Test Skeptic**
-
-- Cross-examines every extracted quote using *The Mom Test* principles.
-- Flags compliments and conversational fluff.
-- Flags hypothetical future promises.
-- Identifies leading questions asked by the founder.
-- Distinguishes weak signals from verified past behavior and actual spending.
-
-Their findings are combined into a contradiction and evidence matrix. The result is not an automatic declaration that the startup idea is validated.
-
-### 3. Mandatory human judgment checkpoint
-
-The workflow stops at **`HALTED_AT_HUMAN_GATE`**. The backend is designed to refuse GTM strategy and investor-material generation until the founder has reviewed and adjudicated every extracted claim.
-
-For each claim, the founder must explicitly choose one of three decisions:
-
-- **✓ Accept as Verified Behavior** — the evidence supports a behavioral claim.
-- **✕ Discard Biased Fluff** — the statement is a compliment, weak signal, or unsupported claim.
-- **⚠ Log to Assumption Debt Ledger** — the claim may matter but still needs to be tested.
-
-The founder must also formulate a pivoted hypothesis and select the target GTM wedge. This is intended to be a hard lifecycle gate, not merely a UI reminder. The project specification identifies `/api/v1/checkpoint-resolve` as the resolution endpoint and **HTTP 422** as the response when claims remain undecided.
-
-### 4. Bilingual strategic decision record and GTM synthesis
-
-Only after the founder signs off does FounderGate generate:
-
-- A formal **Strategic Decision Record (ADR/SDR)**.
-- An **Assumption Debt Ledger** containing unverified claims.
-- The **next five non-leading Mom-Test interview questions**.
-- A **Target GTM Wedge** grounded in accepted behavioral evidence.
-- An **Investor Pre-Emptive Objection Matrix**.
-- Bilingual English/French decision and GTM synthesis.
-
-### Human judgment: what the agent does and what the founder decides
-
-| Stage | What the AI agent does | What the human founder decides | Why human judgment is irreplaceable |
-|---|---|---|---|
-| **1. Evidence extraction and bias audit** | Tags verbatim quotes, links exact interview line numbers, and presents Optimistic vs. Skeptic interpretations. | Reviews both interpretations and corrects misread nuance, sarcasm, or context. | A model cannot reliably infer every emotional hesitation, relationship dynamic, or informal industry context from text alone. |
-| **2. Claim adjudication gate** | The gate is designed to block `/api/v1/checkpoint-resolve` with HTTP 422 until every extracted claim has a human decision. | Classifies each claim as Verified Past Behavior, Biased Fluff (Discard), or Assumption Debt (Needs Testing). | Prevents autopilot validation and makes the founder confront contradictory evidence. |
-| **3. Strategic pivot and wedge selection** | Proposes candidate wedges based strictly on accepted behavioral evidence. | Rewrites the Pivoted Hypothesis and selects the Target GTM Wedge before signing the decision record. | Choosing which market and customer segment a company should pursue is a high-stakes entrepreneurial judgment—not an AI output to accept blindly. |
-
----
+FounderGate accepts interview transcripts and competitor context, applies privacy and prompt-injection checks, runs an adversarial Extractor-versus-Skeptic review, and halts at `HALTED_AT_HUMAN_GATE`. The founder classifies every claim as `ACCEPT_VERIFIED`, `DISCARD_BIASED`, or `LOG_ASSUMPTION_DEBT`, and records a pivoted hypothesis and target wedge. Only then does the system prepare bilingual decision records, an assumption-debt ledger, five non-leading interview questions, and an investor objection matrix.
 
 ## How we built it
 
-### Technology stack
-
-| Layer | Technologies / components |
-|---|---|
-| Backend API | Python, FastAPI, Pydantic |
-| Frontend | Next.js, React, TypeScript, Tailwind CSS |
-| AI providers | Google Gemini, Mistral, Groq, Ollama, OpenRouter, Hugging Face |
-| Workflow automation | n8n |
-| Local / container runtime | Docker and Docker Compose |
-| Safety and governance | PII redaction, prompt-injection checks, explicit lifecycle gate, action logging |
-| Decision artifacts | ADR/SDR template, Assumption Debt Ledger, investor objection matrix |
-
-### System architecture
-
-The following diagram shows the intended flow from input sanitization through adversarial analysis, the mandatory human gate, and post-gate synthesis.
-
-~~~mermaid
-flowchart TB
-    subgraph Input["1. Input and GDPR / Security Gate"]
-        A["Synthetic founder scenario or custom transcripts and competitor notes"]
-        B["safety_gate.py: PII redaction, prompt-injection checks, action log"]
-        A --> B
-    end
-
-    subgraph Router["2. Equal-access AI Router"]
-        R{"Zero-cost / local model router"}
-        R1["Google AI Studio: gemini-2.5-flash"]
-        R2["Mistral: mistral-small-latest"]
-        R3["Groq: llama-3.3-70b-versatile"]
-        R4["Ollama: qwen2.5:7b / llama3.2"]
-        R5["OpenRouter / Hugging Face free models"]
-        R -.-> R1
-        R -.-> R2
-        R -.-> R3
-        R -.-> R4
-        R -.-> R5
-    end
-
-    subgraph Audit["3. Adversarial Discovery Loop"]
-        C["Agent 1: Evidence and Market Extractor"]
-        D["Agent 2: Mom-Test Skeptic"]
-        E["Contradiction and Evidence Matrix"]
-        C -->|"Verbatim quotes and line citations"| D
-        D -->|"Compliments, promises, leading questions, competitor gaps"| E
-    end
-
-    subgraph Gate["4. Mandatory Human Checkpoint"]
-        F{"HALTED_AT_HUMAN_GATE"}
-        G["Founder adjudicates every claim: Accept, Discard, or Log Debt"]
-        H["Pivoted hypothesis and target GTM wedge"]
-        F --> G --> H
-    end
-
-    subgraph Synthesis["5. Post-gate Synthesis and Telemetry"]
-        I["Agent 3: GTM and Investor Synthesizer"]
-        J["ADR / SDR, Assumption Debt Ledger, next five interview questions"]
-        K["Investor objection matrix in English and French"]
-        L["AI disclosure and time-saved report"]
-        I --> J
-        I --> K
-        I --> L
-    end
-
-    B --> C
-    E --> F
-    H --> I
-    R --> C
-    R --> D
-    R --> I
-~~~
-
-**Architecture flow:**
-
-1. **Input and security gate:** accepts one-click synthetic founder scenarios or custom transcripts and competitor notes; sanitizes personal identifiers and checks untrusted input.
-2. **Equal-access AI router:** selects a configured free-tier provider or local inference option.
-3. **Adversarial discovery loop:** pairs an evidence extractor with a skeptical reviewer to expose conflicting interpretations.
-4. **Mandatory human checkpoint:** blocks downstream synthesis until all claims have a founder decision and the pivot hypothesis is recorded.
-5. **Post-gate synthesis:** generates decision records, assumption debt, interview questions, investor objections, and telemetry.
-
-### Runtime AI models, providers, plans, and token estimates
-
-The project is designed around free-tier or local open-weight model access. Provider free tiers, quotas, model identifiers, and availability can change; users should confirm current terms before a run. A zero-cost estimate assumes use within a provider's free allowance or local inference.
-
-| Component / agent role | Model and provider | Plan / execution mode | Calls per run | Estimated tokens per run | Estimated inference cost |
-|---|---|---|---|---:|---:|
-| **Zero-Key Judge Sandbox (default)** | Built-in deterministic Mom-Test rule engine | Open-source / local | 1 local pass | 0 external tokens | **€0.00** |
-| **Option 1: Google AI Studio** | `gemini-2.5-flash` | Free tier | 1 batched JSON call + 1 synthesis call | ~580 Phase 1 + ~340 Phase 2 = **~920 total** | **€0.00 within free limits** |
-| **Option 2: Mistral AI** | `mistral-small-latest` | Free experimentation plan, as listed in project notes | 1 batched JSON call + 1 synthesis call | **~910 total** | **€0.00 within free limits** |
-| **Option 3: Groq Cloud** | `llama-3.3-70b-versatile` | Free tier, subject to quotas | 1 batched JSON call + 1 synthesis call | **~890 total** | **€0.00 within free limits** |
-| **Option 4: Local Ollama** | `qwen2.5:7b` or `llama3.2` | Local open-weight inference | 1 local JSON call + 1 local synthesis | **~850 local tokens** | **€0.00 provider inference cost** |
-| **Option 5: OpenRouter** | `meta-llama/llama-3.3-70b-instruct:free` | Free model route, subject to availability | 1 batched JSON call + 1 synthesis call | **~920 total** | **€0.00 within free limits** |
-| **Option 6: Hugging Face** | `Qwen/Qwen2.5-72B-Instruct` | Free inference availability, subject to access limits | 1 batched JSON call + 1 synthesis call | **~920 total** | **€0.00 within free limits** |
-
-**Cost scope:** The design target is **€0.00 in model-inference charges per run** when using the built-in sandbox, local Ollama, or provider free allowances. This does not imply that hosting, networking, storage, or usage beyond free provider quotas is always free.
-
-### Frugality engineering
-
-Rather than spawning a chatty ten-turn multi-agent conversation estimated at more than 15,000 tokens, FounderGate batches the Extractor and Skeptic into one structured JSON pass and performs synthesis after human approval. The supplied Gemini estimate is approximately **920 tokens per full sprint**.
-
-Compared with a 15,000-token baseline, 920 tokens represents approximately **93.9% fewer tokens**. The originally stated **84%** reduction corresponds to a different baseline; a benchmark should specify its baseline and retain raw token logs before presenting a percentage as a measured result. The structured response approach uses JSON output (for example, a provider's JSON response mode) where supported; exact request parameters vary by provider.
-
-### AI-assisted development disclosure
-
-Cursor and Google Gemini were used during development to assist with TypeScript/FastAPI boilerplate and French translation phrasing. The project specification states that the following were human-designed and verified by the team:
-
-- Agent prompts and Mom-Test rubrics.
-- Lifecycle and human-gate logic.
-- GDPR-oriented PII redaction patterns.
-- Evidence-review and decision workflow.
-
-### Pre-existing open-source libraries and adapted patterns
-
-These projects and frameworks informed the implementation. They are existing dependencies or inspirations, not original work by the FounderGate team.
-
-| Project / library | License stated in project notes | How it informed FounderGate |
-|---|---|---|
-| FastAPI, Pydantic, Next.js, Tailwind CSS | Respective upstream licenses | Standard backend, validation, frontend, and styling foundations. |
-| [affaan-m/ecc — Everything Claude Code](https://github.com/affaan-m/ecc) | MIT, as identified in project notes | Inspired the adversarial `gan-generator` / `gan-evaluator` pairing and brand-discovery, market-research, and investor-material structures, including `70_founder-tension.md` and `90_SYNTHESIS.md`. |
-| engineering-pipeline | v3.1.0, MIT, as identified in project notes | Inspired prompt-injection verification, the hard lifecycle gate, the assumption-debt ledger, and ADR template structure. |
-| [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) | MIT, as identified in project notes | Inspired assumption-debt tracking and token/time-saved telemetry patterns (`ponytail-debt`, `ponytail-gain`, and `ponytail-audit`). |
-| [multica-ai/andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills) | MIT, as identified in project notes | Guided a minimalist, explicit state-machine architecture without unnecessary wrapper layers. |
-
-Check each upstream repository's current license and include applicable attribution and notices in the source distribution before release.
-
-### Intended local setup
-
-Once the application source and Docker files are present, the intended local setup is:
-
-~~~bash
-git clone https://github.com/tejaswin-amara/FounderGate.git
-cd FounderGate
-docker compose up --build
-~~~
-
-| Service | Intended local URL |
-|---|---|
-| Frontend UI | http://localhost:3000 |
-| FastAPI Swagger documentation | http://localhost:8000/docs |
-
-The intended safety and gate test command is:
-
-~~~bash
-docker compose exec backend pytest
-~~~
-
-The repository must contain the relevant Docker Compose services and test suite for these commands to work. Do not commit real API keys: keep `.env` in `.gitignore` and commit only an `.env.example` with blank placeholder values.
-
----
+The intended stack is Python, FastAPI, Pydantic, Next.js, React, TypeScript, Tailwind CSS, n8n, and Docker, with configurable access to Gemini, Mistral, Groq, Ollama, OpenRouter, Hugging Face, and a deterministic zero-key sandbox. The architecture, API contracts, agent rubrics, and run instructions are documented in the files linked above.
 
 ## Challenges we ran into
 
-### Avoiding AI confirmation bias
-
-A conventional assistant is often optimized to produce a helpful-sounding answer. In customer discovery, that can turn weak signals into apparent validation. The challenge was to make the workflow question its optimistic interpretation instead of simply producing a more persuasive summary.
-
-### Making the human checkpoint a real system constraint
-
-A human-review prompt is insufficient if downstream endpoints can still generate strategy without review. FounderGate's design therefore treats adjudication as a lifecycle requirement: every claim needs a decision before post-gate synthesis can proceed.
-
-### Preserving traceability
-
-A conclusion is only useful when the founder can return to the source. The Extractor needs to preserve verbatim quotes and exact line references, while the Skeptic must explain why a quote is weak, hypothetical, leading, or behaviorally meaningful.
-
-### Handling sarcasm, politeness, and cultural nuance
-
-Lightweight models can misread irony, indirect refusals, or culturally polite language. The system must keep the original quote and both agents' interpretations visible so that a human can correct the model.
-
-### Staying frugal without hiding trade-offs
-
-Free-tier quotas and model availability vary. The project balances hosted free-tier providers with local Ollama inference and a zero-key deterministic sandbox, while disclosing that hosted options are subject to provider terms and limits.
-
-### Keeping security safeguards realistic
-
-Regex-based redaction and prompt-injection pattern checks are useful layers, but they cannot guarantee detection of every identifier or attack. The challenge is to make these controls visible, testable, and complemented by careful handling of untrusted content.
-
----
+The central challenges are resisting AI sycophancy, preserving exact quote provenance, enforcing the human checkpoint at the backend rather than only in the UI, handling sarcasm and culturally polite phrasing, and remaining usable when free-tier providers are rate-limited. Regex redaction and prompt-pattern checks are safeguards, not guarantees; provider quotas, model behavior, and privacy obligations must be reviewed for each deployment.
 
 ## Accomplishments that we're proud of
 
-- **Adversarial review instead of one-sided summarization:** an evidence extractor is explicitly challenged by a Mom-Test skeptic.
-- **A mandatory human decision gate:** downstream GTM and investor synthesis is designed to remain blocked until every claim has been adjudicated.
-- **Traceable evidence:** extracted claims retain verbatim quotes and exact source-line references.
-- **Privacy and input safeguards:** the workflow includes PII redaction and prompt-injection checks before model processing.
-- **Low-cost evaluation path:** a zero-key sandbox and local inference option reduce the barrier for judges and founders to try the workflow.
-- **Actionable post-gate outputs:** the founder receives a decision record, assumption-debt ledger, five follow-up interview questions, and an investor objection matrix.
-- **Bilingual output:** decision and GTM artifacts are designed for English and French.
-- **A founder-first operating model:** AI handles repetitive synthesis and adversarial review, while the founder retains the strategic decision.
+- A two-perspective evidence audit instead of one-sided transcript summarization.
+- A mandatory lifecycle gate that requires a founder decision for every extracted claim.
+- Verbatim quote and source-line traceability.
+- Privacy-oriented preprocessing and prompt-injection checks.
+- A zero-key sandbox and local-inference design for low-friction evaluation.
+- Post-gate strategic artifacts in English and French.
+- A benchmark methodology that makes manual baseline, human-review time, and claimed time savings explicit.
 
-### Time-saved report
+### Reported time-saved benchmark
 
-The project specification reports a benchmark across **three startup discovery scenarios**, each containing three to four customer interviews and competitor-review notes of approximately 600–1,000 words per sprint. The figures below are the supplied before/after estimates and should be accompanied by raw timing logs if presented as independently measured benchmark results.
+The supplied benchmark notes describe three synthetic discovery scenarios:
 
-| Workflow sub-task | Manual founder baseline | FounderGate + human checkpoint | Reported net time saved |
-|---|---:|---:|---:|
-| **1. GDPR PII scrubbing and verbatim quote tagging** | ~30 minutes | ~0.2 seconds | ~29.8 minutes |
-| **2. Mom-Test confirmation-bias audit** | ~25 minutes | ~2.5 seconds | ~24.9 minutes |
-| **3. Contradiction resolution and pivot formulation** | ~20 minutes | ~3.5 minutes | ~16.5 minutes |
-| **4. ADR/SDR, assumption-debt ledger, and five interview questions** | ~20 minutes | ~1.0 second | ~19.9 minutes |
-| **Total per discovery sprint** | **95 minutes** | **~5 minutes** | **~90 minutes (94.7% reduction)** |
+| Scenario | Manual baseline | FounderGate + human checkpoint | Reported time saved | Reduction |
+|---|---:|---:|---:|---:|
+| B2B Invoice Recovery SaaS | 95 min | 5 min | 90 min | 94.7% |
+| Student Alternance Copilot | 88 min | 4.5 min | 83.5 min | 94.9% |
+| D2C Packaging Compliance Auditor | 85 min | 4 min | 81 min | 95.3% |
 
-At two sprints per week for four weeks, the reported estimate is **12 hours saved** (eight sprints × 90 minutes) on repetitive synthesis. FounderGate is intended to reduce research overhead; it does not prove product-market fit or guarantee that a founder will avoid a poor investment decision.
-
-### Responsible AI, privacy, and limitations
-
-**Privacy and GDPR-oriented safeguards**
-
-- The project specification identifies `verify_and_sanitize_input()` as the sanitization function.
-- Email addresses, phone numbers, and IBANs are intended to be redacted before payloads are sent to an external provider.
-- For sensitive B2B or NDA-protected interviews, users can select local Ollama inference (for example, `qwen2.5:7b`) so model inference remains on the local machine.
-- Three built-in synthetic founder scenarios are included in the design so judges can test without uploading real third-party personal data:
-  1. B2B Invoice SaaS.
-  2. Student Alternance EdTech.
-  3. D2C GreenTech Packaging.
-
-These safeguards do not, by themselves, establish GDPR compliance. A deployment also needs an assessment of lawful basis, transparency, retention, access controls, processor terms, hosting region, data-subject rights, and other obligations that apply to the actual processing.
-
-**Prompt injection and untrusted input**
-
-Competitor reviews and customer transcripts are untrusted content. Patterns such as *“Ignore previous instructions”* and *“Override human checkpoint”* are intended to be blocked by the pre-flight safety gate with **HTTP 400**. Pattern matching is not a complete defense against prompt injection; prompts and tools must continue to treat supplied content as data, not instructions.
-
-**Known limitations and mitigations**
-
-- **Sarcasm and cultural politeness:** Lightweight 7B–8B models can misclassify dry irony or culturally polite phrasing. Each evidence card should show the verbatim quote, exact line number, confidence score, and both agents' arguments so the founder can override the classification.
-- **Small-sample fallacy:** Two interviews may indicate a problem for those two people; they do not establish a €100M total addressable market. The Assumption Debt Ledger tracks unverified market-sizing claims and records falsification experiments to complete before making fundraising claims.
-- **Model and provider variability:** Providers and model versions can return different classifications, exhaust free quotas, or change availability. Keep provider/model details visible, validate structured responses, retain source evidence, and provide a deterministic sandbox or local inference path where practical.
-
----
+These figures are project-reported estimates. Publish raw timings and benchmark scripts before describing them as independently reproduced measurements.
 
 ## What we learned
 
-- **Customer evidence is not customer enthusiasm.** Compliments and hypothetical intentions are weaker signals than documented past behavior, workarounds, and actual spending.
-- **Contradiction is useful.** Optimistic and skeptical interpretations should be visible together rather than collapsed into one confident summary.
-- **Human-in-the-loop must be enforced technically.** A meaningful checkpoint requires backend state and endpoint-level enforcement, not just a UI warning.
-- **Traceability improves trust.** Verbatim quotes, line references, and explicit reasoning make it possible for users to challenge an agent's interpretation.
-- **Frugality is an architectural decision.** Batching structured work, using local inference, and providing a deterministic sandbox can make an agent workflow more accessible.
-- **Privacy controls have limits.** Regex-based redaction and prompt-injection patterns are useful safeguards, but cannot guarantee that every identifier or attack will be detected.
-- **A small sample is not a market.** Interview findings should generate testable assumptions, not unsupported market-size or product-market-fit claims.
-
-### Résumé exécutif en français
-
-**Problématique :** Les fondateurs perdent des heures chaque semaine à synthétiser leurs entretiens clients et leurs analyses concurrentielles. Pire encore, un LLM classique peut agir comme une chambre d'écho et transformer des compliments polis — par exemple « Super maquette ! » — ou des promesses hypothétiques — « Je paierais 29 € par mois au lancement ! » — en fausse validation du marché.
-
-**Notre solution — FounderGate :**
-
-1. **Anonymisation RGPD et sécurité :** filtrage des données personnelles (e-mails, téléphones et IBAN) et détection des injections de prompt avant l'envoi des données à un fournisseur d'IA.
-2. **Audit adversarial (Extracteur vs. Sceptique Mom Test) :** un premier agent extrait les citations importantes avec leurs numéros de ligne ; un second applique les principes du *Mom Test* pour signaler les compliments, les promesses hypothétiques et les questions orientées.
-3. **Point de contrôle humain obligatoire — `HALTED_AT_HUMAN_GATE` :** le système s'arrête. Le fondateur examine chaque contradiction et choisit de valider le comportement observé, d'écarter le signal biaisé ou de l'inscrire dans le registre des hypothèses à tester. Il reformule ensuite son hypothèse et choisit son segment GTM.
-4. **Synthèse stratégique bilingue :** après validation humaine, FounderGate génère un ADR/SDR, un registre de dette d'hypothèses, cinq prochaines questions d'entretien non orientées et une matrice des objections des investisseurs.
-5. **Accès frugal :** le projet est conçu pour fonctionner avec un mode Sandbox sans clé API, des offres gratuites de fournisseurs compatibles ou Ollama en local. Le coût d'inférence dépend des quotas et des conditions des fournisseurs.
-
-**Principe fondamental :** l'IA ne choisit pas la stratégie du fondateur. Elle l'aide à examiner les preuves, à repérer les biais et à prendre une décision éclairée.
-
-### How judges can test it
-
-**Option A — Live web demo (zero setup)**
-
-1. Open the [FounderGate live demo](https://foundergate-hetic26.vercel.app).
-2. Keep the engine on **Zero-Key Judge Sandbox (Instant)**, or select a supported provider and supply a key for its free tier.
-3. Choose one of the three synthetic founder scenarios in the top-left dropdown.
-4. Click **Run Adversarial Discovery Audit →**.
-5. Confirm that the workflow stops at **`HALTED_AT_HUMAN_GATE`**.
-6. Use **Auto-Fill Recommended Decisions (Judge Shortcut)** or manually classify every claim.
-7. Review the pivoted hypothesis, then click **Sign Off Human Checkpoint & Generate Bilingual Strategic Decision Record →**.
-
-**Option B — Local Docker run**
-
-Once the application source and Docker files are committed, use:
-
-~~~bash
-git clone https://github.com/tejaswin-amara/FounderGate.git
-cd FounderGate
-docker compose up --build
-~~~
-
-- Frontend UI: `http://localhost:3000`
-- FastAPI Swagger documentation: `http://localhost:8000/docs`
-- Intended safety and gate test command: `docker compose exec backend pytest`
-
-These commands require the corresponding Docker Compose services and test suite to be present in the repository.
-
----
+- Customer enthusiasm is not the same as verified past behavior or willingness to pay.
+- Opposing agent interpretations are more useful when both remain visible and grounded in source evidence.
+- A meaningful human-in-the-loop design must be enforced by backend state and endpoint validation.
+- Synthetic data makes demos safer and repeatable, but does not prove real-world market demand.
+- Token and time-saved claims need explicit baselines, repeatable methods, and raw measurements.
+- Redaction and prompt-injection filters reduce risk but cannot guarantee complete privacy or security.
 
 ## What's next for FounderGate: Adversarial Mom-Test & GTM Discovery Agent
 
-1. **Complete and publish the source tree:** commit the FastAPI backend, Next.js frontend, safety-gate implementation, model adapters, tests, Docker configuration, and n8n workflow export.
-2. **Strengthen evaluation:** build a repeatable benchmark set covering compliments, hypothetical promises, leading questions, verified past behavior, sarcasm, multilingual phrasing, and prompt-injection attempts.
-3. **Improve evidence quality:** add robust source provenance, confidence calibration, quote-level review, and clearer explanations for each skeptic flag.
-4. **Harden privacy controls:** test redaction against varied formats and edge cases, document data retention, and review provider and deployment data-processing terms.
-5. **Expand local-first workflows:** improve Ollama model selection, local resource checks, and graceful fallback behavior when hosted free tiers are unavailable.
-6. **Improve decision traceability:** version the founder's hypotheses, adjudications, ADR/SDR records, and assumption-debt experiments.
-7. **Validate time-saved claims:** publish benchmark scripts, scenario data, raw run timings, token counts, and the exact manual-baseline methodology.
-8. **Complete submission evidence:** verify the deployed demo, public source repository, n8n workflow export, provider availability, test results, and all claims before the HETIC 2026 submission.
+1. Commit and test the FastAPI backend, Next.js frontend, provider adapters, safety gate, and human checkpoint.
+2. Publish the n8n workflow export and verify that it matches the documented workflow.
+3. Add a repeatable evaluation corpus for compliments, promises, leading questions, past behavior, sarcasm, multilingual language, and prompt injection.
+4. Harden PII handling, retention controls, provider disclosures, and local-first inference.
+5. Version founder hypotheses, adjudications, ADR/SDR records, and assumption-debt experiments.
+6. Reproduce the token and time-saved benchmarks with scripts, raw measurements, and documented baselines.
+7. Complete QA, the three-minute judge demo, and the HETIC 2026 submission checklist by December 18, 2026, 5:00 PM CET.
 
-### Devpost submission checklist
-
-- [ ] **Demo video:** provide a YouTube or Vimeo video no longer than **3:00 minutes**. Show a complete run, including `HALTED_AT_HUMAN_GATE`, human Accept/Discard/Debt decisions, and the unlocked Strategic Decision Record.
-- [ ] **Team size:** confirm that **2–4 college student teammates aged 18+** are listed under Devpost **Manage Team**, as required by the challenge rules.
-- [ ] **Secrets check:** ensure `.env` is ignored and only `.env.example` with blank keys is committed.
-- [ ] **Public repository and workflow export:** keep the GitHub repository public and include the full-stack application and `workflows/n8n-foundergate-workflow.json`.
-- [ ] **Rules and legal agreement:** review and accept the official HETIC Paris challenge rules and applicable governing-law agreement.
-- [ ] **Final evidence review:** verify live URLs, provider/model availability, test results, benchmark evidence, and all claims immediately before submission.
-
----
+> **Accuracy and compliance note:** This documentation describes the intended design and team-supplied specifications. GDPR compliance, security effectiveness, free-tier availability, benchmark results, and implementation status must be verified against the actual code, provider terms, test evidence, and applicable legal requirements. PII scrubbing alone does not establish GDPR compliance.
 
 *FounderGate — Smarter decisions. Less hype.*
-
-> **Repository note:** This README describes the project design and supplied specifications. Before treating implementation statements, benchmark figures, or judge instructions as verified release evidence, confirm them against the committed source code, reproducible tests, provider documentation, and official challenge rules.
