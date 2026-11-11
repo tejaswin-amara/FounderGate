@@ -107,7 +107,7 @@ The intended test suite should verify:
 | [docs/04_AI_DISCLOSURE_AND_TIME_SAVED_AUDIT.md](./docs/04_AI_DISCLOSURE_AND_TIME_SAVED_AUDIT.md) | Equal Access AI provider ledger, token accounting, and time-saved methodology. |
 | [docs/05_RESPONSIBLE_AI_AND_LIMITATIONS.md](./docs/05_RESPONSIBLE_AI_AND_LIMITATIONS.md) | Data provenance, bias mitigation, failure modes, and synthetic-data policy. |
 | [docs/06_DEVELOPMENT_ROADMAP_AND_RUNBOOK.md](./docs/06_DEVELOPMENT_ROADMAP_AND_RUNBOOK.md) | November 16–December 18, 2026 development roadmap, QA checklist, recovery guide, and judge runbook. |
-| [docs/07_JULES_MULTI_SESSION_EXECUTION_PLAN.md](./docs/07_JULES_MULTI_SESSION_EXECUTION_PLAN.md) | Historical 15-session execution plan; superseded for post-November 11 coding by the MCP-aware migration guide. |\n| [docs/08_MCP_INTEGRATION_AND_AGENT_MIGRATION.md](./docs/08_MCP_INTEGRATION_AND_AGENT_MIGRATION.md) | Eight connected MCPs mapped to sessions, least-privilege rules, safe database/provider selection, agent migration, and staging deployment. |
+| [docs/07_JULES_MULTI_SESSION_EXECUTION_PLAN.md](./docs/07_JULES_MULTI_SESSION_EXECUTION_PLAN.md) | Historical 15-session execution plan; superseded for post-November 11 coding by the MCP-aware migration guide. |\n| [docs/08_MCP_INTEGRATION_AND_AGENT_MIGRATION.md](./docs/08_MCP_INTEGRATION_AND_AGENT_MIGRATION.md) | Eight connected MCPs mapped to sessions, least-privilege rules, safe database/provider selection, agent migration, and staging deployment. |\n| [docs/09_FINAL_CODING_AGENT_PROMPTS.md](./docs/09_FINAL_CODING_AGENT_PROMPTS.md) | Final copy/paste prompts for J00–J15, MCP permissions, parallel/solo execution schedule, and safety gates. |
 
 ### Repository layout
 
