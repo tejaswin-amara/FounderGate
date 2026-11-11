@@ -107,6 +107,7 @@ The intended test suite should verify:
 | [docs/04_AI_DISCLOSURE_AND_TIME_SAVED_AUDIT.md](./docs/04_AI_DISCLOSURE_AND_TIME_SAVED_AUDIT.md) | Equal Access AI provider ledger, token accounting, and time-saved methodology. |
 | [docs/05_RESPONSIBLE_AI_AND_LIMITATIONS.md](./docs/05_RESPONSIBLE_AI_AND_LIMITATIONS.md) | Data provenance, bias mitigation, failure modes, and synthetic-data policy. |
 | [docs/06_DEVELOPMENT_ROADMAP_AND_RUNBOOK.md](./docs/06_DEVELOPMENT_ROADMAP_AND_RUNBOOK.md) | November 16–December 18, 2026 development roadmap, QA checklist, recovery guide, and judge runbook. |
+| [docs/07_JULES_MULTI_SESSION_EXECUTION_PLAN.md](./docs/07_JULES_MULTI_SESSION_EXECUTION_PLAN.md) | 15-session Google Jules implementation plan, dependency waves, session prompts, PR gates, and release criteria. |
 
 ### Repository layout
 
