@@ -9,7 +9,7 @@
   <a href="https://github.com/tejaswin-amara/FounderGate">GitHub Repository</a>
 </p>
 
-## 🌍 English Overview & 🇫🇷 Résumé en Français
+### 🌍 English Overview & 🇫🇷 Résumé en Français
 
 ### 🇬🇧 English Summary
 
@@ -39,7 +39,7 @@ Les fondateurs de startups en phase de démarrage perdent des heures à analyser
 
 ---
 
-## ⚡ 30-Second Judge Verification
+### ⚡ 30-Second Judge Verification
 
 ### Option 1: Docker Compose
 
@@ -94,7 +94,7 @@ The intended test suite should verify:
 
 ---
 
-## 📚 Documentation Index
+### 📚 Documentation Index
 
 | File | Purpose |
 |---|---|
@@ -107,6 +107,23 @@ The intended test suite should verify:
 | [docs/04_AI_DISCLOSURE_AND_TIME_SAVED_AUDIT.md](./docs/04_AI_DISCLOSURE_AND_TIME_SAVED_AUDIT.md) | Equal Access AI provider ledger, token accounting, and time-saved methodology. |
 | [docs/05_RESPONSIBLE_AI_AND_LIMITATIONS.md](./docs/05_RESPONSIBLE_AI_AND_LIMITATIONS.md) | Data provenance, bias mitigation, failure modes, and synthetic-data policy. |
 | [docs/06_DEVELOPMENT_ROADMAP_AND_RUNBOOK.md](./docs/06_DEVELOPMENT_ROADMAP_AND_RUNBOOK.md) | November 16–December 18, 2026 development roadmap, QA checklist, recovery guide, and judge runbook. |
+
+### Repository layout
+
+~~~text
+FounderGate/
+├── README.md
+├── AGENTS.md
+├── CONTRIBUTING.md
+├── SECURITY.md
+└── docs/
+    ├── 01_PRD_AND_TECHNICAL_SPEC.md
+    ├── 02_AGENT_PROMPTS_AND_RUBRICS.md
+    ├── 03_ADR_LOG.md
+    ├── 04_AI_DISCLOSURE_AND_TIME_SAVED_AUDIT.md
+    ├── 05_RESPONSIBLE_AI_AND_LIMITATIONS.md
+    └── 06_DEVELOPMENT_ROADMAP_AND_RUNBOOK.md
+~~~
 
 ---
 
@@ -123,6 +140,59 @@ FounderGate accepts interview transcripts and competitor context, applies privac
 ## How we built it
 
 The intended stack is Python, FastAPI, Pydantic, Next.js, React, TypeScript, Tailwind CSS, n8n, and Docker, with configurable access to Gemini, Mistral, Groq, Ollama, OpenRouter, Hugging Face, and a deterministic zero-key sandbox. The architecture, API contracts, agent rubrics, and run instructions are documented in the files linked above.
+
+### System Architecture
+
+The intended application flow is illustrated below. The diagram describes the planned architecture; it is not a claim that every component is already implemented in this documentation-only repository.
+
+~~~mermaid
+flowchart TB
+    subgraph Input["1. Input and GDPR / Security Gate"]
+        A["Synthetic founder scenario or custom transcripts and competitor notes"]
+        B["Safety gate: PII redaction, prompt-injection checks, action log"]
+        A --> B
+    end
+    subgraph Router["2. Equal-access AI Router"]
+        R{"Zero-cost / local model router"}
+        R1["Google AI Studio: Gemini"]
+        R2["Mistral"]
+        R3["Groq"]
+        R4["Ollama local"]
+        R5["OpenRouter / Hugging Face"]
+        R -.-> R1
+        R -.-> R2
+        R -.-> R3
+        R -.-> R4
+        R -.-> R5
+    end
+    subgraph Audit["3. Adversarial Discovery Loop"]
+        C["Agent 1: Evidence Extractor"]
+        D["Agent 2: Mom-Test Skeptic"]
+        E["Contradiction and Evidence Matrix"]
+        C -->|"Verbatim quotes and line citations"| D
+        D --> E
+    end
+    subgraph Gate["4. Mandatory Human Checkpoint"]
+        F{"HALTED_AT_HUMAN_GATE"}
+        G["Founder adjudicates every claim"]
+        H["Pivoted hypothesis and target GTM wedge"]
+        F --> G --> H
+    end
+    subgraph Synthesis["5. Post-gate Synthesis"]
+        I["Agent 3: GTM and Investor Synthesizer"]
+        J["ADR / SDR and Assumption Debt Ledger"]
+        K["Next five interview questions and investor objection matrix"]
+        I --> J
+        I --> K
+    end
+    B --> C
+    E --> F
+    H --> I
+    R --> C
+    R --> D
+    R --> I
+~~~
+
 
 ## Challenges we ran into
 
